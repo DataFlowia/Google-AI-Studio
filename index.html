@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Educativo: Google AI Studio | Dataflow IA</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0265d2',
+                            700: '#034ea2',
+                            800: '#073e7d',
+                            900: '#0b294f',
+                            dark: '#080e1a',
+                            accent: '#00d2ff',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and sleek styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0284c7;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px -5px rgba(2, 132, 199, 0.3);
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased bg-slate-950 text-slate-100 overflow-x-hidden selection:bg-cyan-500 selection:text-slate-950">
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Header Left: Logo -->
+                <div class="flex items-center gap-3">
+                    <a href="#" class="flex items-center gap-3 group">
+                        <div class="relative flex items-center justify-center p-1 rounded-xl bg-slate-900 border border-slate-800 group-hover:border-cyan-500/50 transition-all duration-300">
+                            <!-- Attempt local image first, with SVG fallback -->
+                            <img src="Data Transp-1.png" alt="Dataflow IA Logo" class="h-12 w-auto object-contain" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                            <div id="logo-fallback" class="hidden items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-tr from-blue-700 via-cyan-500 to-indigo-600 text-white font-black text-xl shadow-lg">
+                                <i class="fa-solid font-bold">D</i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-black tracking-wider bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">DATAFLOW <span class="text-cyan-400">IA</span></span>
+                            <span class="text-[10px] font-semibold text-cyan-400/80 uppercase tracking-widest">Plataforma Académica</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                        </span>
+                        <input id="searchInput" type="text" onkeyup="filterContent()" placeholder="Buscar conceptos, herramientas o ejemplos..." class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                    </div>
+                </div>
+
+                <!-- Header Right: Action & Mobile Toggle -->
+                <div class="flex items-center gap-3">
+                    <span class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-cyan-950/80 text-cyan-400 border border-cyan-800/50">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        Ecosistema Gemini 2026
+                    </span>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+                        <i class="fa-solid fa-bars text-lg" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar (sub-header for phones) -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </span>
+                <input id="mobileSearchInput" type="text" onkeyup="syncAndFilter(this.value)" placeholder="Buscar en el contenido..." class="w-full pl-9 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAVIGATION DRAWER -->
+    <div id="mobileDrawer" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-lg hidden md:hidden flex-col transition-all duration-300">
+        <div class="flex items-center justify-between p-4 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-white">Menú Módulos</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <nav class="p-4 space-y-2 overflow-y-auto flex-1">
+            <button onclick="switchTab('overview'); toggleMobileMenu()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-all">
+                <i class="fa-solid fa-cubes text-cyan-400"></i> Visión General & Métricas
+            </button>
+            <button onclick="switchTab('prompts'); toggleMobileMenu()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-all">
+                <i class="fa-solid fa-terminal text-cyan-400"></i> Entornos de Prompts
+            </button>
+            <button onclick="switchTab('controls'); toggleMobileMenu()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-all">
+                <i class="fa-solid fa-sliders text-cyan-400"></i> Panel de Configuración
+            </button>
+            <button onclick="switchTab('advanced'); toggleMobileMenu()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-all">
+                <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i> Herramientas Avanzadas
+            </button>
+            <button onclick="switchTab('playground'); toggleMobileMenu()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-all">
+                <i class="fa-solid fa-flask text-cyan-400"></i> Simulador Interactivo
+            </button>
+            <button onclick="switchTab('workflow'); toggleMobileMenu()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-all">
+                <i class="fa-solid fa-diagram-project text-cyan-400"></i> Flujo Pedagógico
+            </button>
+        </nav>
+    </div>
+
+    <!-- MAIN BODY / LAYOUT -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
+
+        <!-- DESKTOP SIDEBAR -->
+        <aside class="hidden md:block w-64 shrink-0">
+            <div class="sticky top-28 space-y-2 p-3 glass-panel rounded-2xl border border-slate-800">
+                <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    Módulos Educativos
+                </div>
+                <nav class="space-y-1">
+                    <button onclick="switchTab('overview')" id="nav-overview" class="nav-btn active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800/80">
+                        <i class="fa-solid fa-chart-pie text-cyan-400 w-5"></i>
+                        <span>1. Visión General</span>
+                    </button>
+                    <button onclick="switchTab('prompts')" id="nav-prompts" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800/80">
+                        <i class="fa-solid fa-comments text-cyan-400 w-5"></i>
+                        <span>2. Entornos Prompts</span>
+                    </button>
+                    <button onclick="switchTab('controls')" id="nav-controls" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800/80">
+                        <i class="fa-solid fa-sliders text-cyan-400 w-5"></i>
+                        <span>3. Parámetros Técnicos</span>
+                    </button>
+                    <button onclick="switchTab('advanced')" id="nav-advanced" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800/80">
+                        <i class="fa-solid fa-microchip text-cyan-400 w-5"></i>
+                        <span>4. Herramientas Avanzadas</span>
+                    </button>
+                    <button onclick="switchTab('playground')" id="nav-playground" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800/80">
+                        <i class="fa-solid fa-vial text-cyan-400 w-5"></i>
+                        <span>5. Simulador Studio</span>
+                    </button>
+                    <button onclick="switchTab('workflow')" id="nav-workflow" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800/80">
+                        <i class="fa-solid fa-diagram-project text-cyan-400 w-5"></i>
+                        <span>6. Flujo de Trabajo</span>
+                    </button>
+                </nav>
+
+                <div class="mt-6 pt-4 border-t border-slate-800/80 px-3">
+                    <div class="p-3 rounded-xl bg-gradient-to-br from-cyan-950/50 to-blue-950/30 border border-cyan-800/30">
+                        <p class="text-xs font-semibold text-cyan-300 mb-1"><i class="fa-solid fa-graduation-cap mr-1"></i> Dataflow IA Docencia</p>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Guía completa optimizada para aprendizaje de LLMs y desarrollo en la nube.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 min-w-0">
+
+            <!-- TAB 1: OVERVIEW -->
+            <section id="tab-overview" class="tab-content space-y-6">
+                <!-- HERO BANNER -->
+                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 p-6 sm:p-8 border border-slate-800 glow-effect">
+                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="relative z-10 max-w-3xl">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-medium mb-3">
+                            <i class="fa-solid fa-sparkles"></i> Módulo Pedagógico Máster
+                        </div>
+                        <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white mb-3">
+                            Google AI Studio y su Ecosistema
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                            El entorno de desarrollo integrado (<span class="text-cyan-400 font-semibold">Web IDE / Playground</span>) de vanguardia para prototipar, experimentar y desplegar aplicaciones de Inteligencia Artificial Generativa con la familia de modelos <span class="text-cyan-400 font-semibold">Gemini</span>.
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="switchTab('playground')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+                                <i class="fa-solid fa-play"></i> Probar Simulador
+                            </button>
+                            <button onclick="switchTab('prompts')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-book-open"></i> Explorar Prompts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- METRICS / HIGHLIGHTS CARDS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/40 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Superventana Contexto</span>
+                            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                                <i class="fa-solid fa-database text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-black text-white mb-1">2,000,000</div>
+                        <p class="text-xs text-slate-400">Tokens soportados (horas de video, miles de líneas de código o extensos PDFs en 1 consulta).</p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/40 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Control de Precisión</span>
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                                <i class="fa-solid fa-sliders text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-black text-white mb-1">0.0 – 2.0</div>
+                        <p class="text-xs text-slate-400">Calibración de Temperatura, esquemas JSON rigurosos e instrucciones de sistema.</p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/40 transition-all sm:col-span-2 lg:col-span-1">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Exportación Multilenguaje</span>
+                            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                                <i class="fa-solid fa-code text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-black text-white mb-1">Get Code</div>
+                        <p class="text-xs text-slate-400">Traducción inmediata a SDKs de Python, JavaScript, Swift, Kotlin y peticiones cURL.</p>
+                    </div>
+                </div>
+
+                <!-- WHY IT MATTERS -->
+                <div class="p-6 rounded-2xl glass-panel border border-slate-800">
+                    <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-compass text-cyan-400"></i>
+                        ¿Por qué es una herramienta clave en la IA moderna?
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                            <div class="text-cyan-400 font-bold mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-cyan-950 border border-cyan-800 flex items-center justify-center text-xs">1</span>
+                                Contexto Gigantesco
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Procesa libros enteros, repositorios de código completos o grabaciones de audio/video de larga duración sin requerir división compleja en chunks.
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                            <div class="text-cyan-400 font-bold mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-cyan-950 border border-cyan-800 flex items-center justify-center text-xs">2</span>
+                                Control Técnico
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Permite moldear la salida a formato JSON estricto, ajustar filtros de seguridad y forzar invocación a APIs externas (*Function Calling*).
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                            <div class="text-cyan-400 font-bold mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-cyan-950 border border-cyan-800 flex items-center justify-center text-xs">3</span>
+                                Flujo Sin Fricción
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Diseñado para prototipar visualmente ideas en minutos y exportar instantáneamente el código listo para entornos de producción.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: PROMPT ENVIRONMENTS -->
+            <section id="tab-prompts" class="tab-content hidden space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-cyan-400"></i>
+                        La Tríada de Entornos de Prompts
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Tres modalidades distintas diseñadas para resolver cualquier reto pedagógico o de ingeniería de software.
+                    </p>
+                </div>
+
+                <!-- TAB ACCORDION CARDS -->
+                <div class="space-y-4">
+                    <!-- A. CHAT PROMPTS -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg font-bold">
+                                    <i class="fa-solid fa-comments"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">A. Chat Prompts (Conversacionales)</h3>
+                                    <span class="text-xs text-cyan-400 font-medium">Agentes, Chatbots e Interacción Multiturno</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                            Ideal para simular diálogos iterativos, agentes virtuales, chatbots educativos y asistentes de soporte donde el historial de conversación es crucial.
+                        </p>
+
+                        <!-- Practical Example Box -->
+                        <div class="rounded-xl bg-slate-900 border border-slate-800 p-4 space-y-3">
+                            <div class="flex items-center justify-between text-xs font-semibold text-slate-400 border-b border-slate-800 pb-2">
+                                <span><i class="fa-solid fa-flask text-cyan-400 mr-1"></i> Ejemplo Práctico: Tutor de Física Cuántica</span>
+                                <span class="text-cyan-400 font-mono">System Instruction</span>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-lg text-xs font-mono text-cyan-300 border border-slate-800">
+                                "Eres un profesor universitario de física. Explica conceptos complejos usando analogías cotidianas. Nunca des la respuesta directa inmediatamente; guía al estudiante con preguntas socráticas."
+                            </div>
+                            <div class="space-y-2 text-xs">
+                                <div class="p-3 rounded-lg bg-blue-950/40 border border-blue-900/40 text-blue-200">
+                                    <strong class="text-blue-400">User:</strong> "¿Qué es el entrelazamiento cuántico?"
+                                </div>
+                                <div class="p-3 rounded-lg bg-slate-800/80 text-slate-200">
+                                    <strong class="text-cyan-400">Gemini:</strong> "Imagina que tienes un par de calcetines mágicos. Si te pones el calcetín izquierdo en casa y tu hermano se lleva el otro a Japón, en el instante en que miras tu pie y ves que es el izquierdo, sabes instantáneamente que el de tu hermano es el derecho. ¿Qué crees que pasaría si el estado de los calcetines no se decidiera hasta que alguien mirara uno de ellos?"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B. FREEFORM PROMPTS -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-file-pen"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">B. Freeform Prompts (Formato Libre)</h3>
+                                <span class="text-xs text-purple-400 font-medium">Análisis Documental y Contexto Multimodal Granular</span>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                            Permite combinar texto libre, imágenes, archivos de audio, grabaciones de video y código sin la restricción de turnos de diálogo rígidos. Ideal para resúmenes y análisis cruzado.
+                        </p>
+
+                        <!-- Practical Example Box -->
+                        <div class="rounded-xl bg-slate-900 border border-slate-800 p-4 space-y-3">
+                            <div class="flex items-center justify-between text-xs font-semibold text-slate-400 border-b border-slate-800 pb-2">
+                                <span><i class="fa-solid fa-flask text-purple-400 mr-1"></i> Ejemplo Práctico: Auditoría Multimodal de Reportes</span>
+                                <span class="text-purple-400 font-mono">Documento + Imagen</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf text-red-400 text-base"></i>
+                                    <span>balance_general.pdf (50 pág.)</span>
+                                </div>
+                                <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-image text-emerald-400 text-base"></i>
+                                    <span>grafico_ventas.png</span>
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-purple-300">
+                                "Analiza el PDF adjunto y contrástalo con la tendencia visual del gráfico de ventas. Genera un resumen ejecutivo indicando si los datos coinciden con la Tabla 4.2. Destaca discrepancias en viñetas."
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C. STRUCTURED PROMPTS -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-table-cells"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">C. Structured Prompts (Few-Shot Prompts)</h3>
+                                <span class="text-xs text-emerald-400 font-medium">Clasificación, Extracción de Entidades y Formato Consistente</span>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                            Fuerza al modelo a seguir patrones estrictos mediante pares de ejemplo (*Input/Output*). Elimina el margen de error en tareas repetitivas de automatización.
+                        </p>
+
+                        <!-- Practical Example Table -->
+                        <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden">
+                            <div class="px-4 py-3 bg-slate-850 border-b border-slate-800 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-flask text-emerald-400 mr-1"></i> Ejemplo Práctico: Extractor de Datos de CRM
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-950 text-slate-400 uppercase font-mono">
+                                        <tr>
+                                            <th class="p-3 border-b border-slate-800">Input (Texto libre)</th>
+                                            <th class="p-3 border-b border-slate-800">Output (JSON Estructurado)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800 font-mono">
+                                        <tr class="hover:bg-slate-850">
+                                            <td class="p-3 text-slate-300">"Hola, soy María López de Madrid (maria@test.com), quiero plan Premium."</td>
+                                            <td class="p-3 text-emerald-400">{ "nombre": "María López", "ciudad": "Madrid", "email": "maria@test.com", "plan": "Premium" }</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-850">
+                                            <td class="p-3 text-slate-300">"Habla Carlos Ruiz desde Bogotá (carlos.r@correo.co) por plan Básico."</td>
+                                            <td class="p-3 text-emerald-400">{ "nombre": "Carlos Ruiz", "ciudad": "Bogotá", "email": "carlos.r@correo.co", "plan": "Básico" }</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: TECHNICAL CONTROLS -->
+            <section id="tab-controls" class="tab-content hidden space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-cyan-400"></i>
+                        Panel de Control y Parámetros Técnicos
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Domina la calibración técnica que separa a un usuario novato de un profesional en desarrollo de IA.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Control 1 -->
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold">01</div>
+                            <h3 class="text-base font-bold text-white">Model Selection</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                            Permite alternar según las demandas del problema:
+                        </p>
+                        <ul class="text-xs space-y-2 text-slate-400">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span><strong class="text-slate-200">Gemini 1.5 Pro:</strong> Alta capacidad de razonamiento complejo, tareas multimodales de gran volumen.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span><strong class="text-slate-200">Gemini 1.5 Flash:</strong> Ultrarrápido, baja latencia y óptimo para tareas ligeras repetitivas.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Control 2 -->
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold">02</div>
+                            <h3 class="text-base font-bold text-white">Temperature (0.0 a 2.0)</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                            Controla la aleatoriedad y nivel de creatividad en la generación de tokens:
+                        </p>
+                        <div class="space-y-2 text-xs">
+                            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex justify-between">
+                                <span class="text-slate-300 font-medium">Baja (0.0 - 0.2)</span>
+                                <span class="text-cyan-400 font-mono">Preciso / Matemáticas / Código</span>
+                            </div>
+                            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex justify-between">
+                                <span class="text-slate-300 font-medium">Alta (0.8 - 1.5)</span>
+                                <span class="text-purple-400 font-mono">Creativo / Lluvia de ideas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control 3 -->
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold">03</div>
+                            <h3 class="text-base font-bold text-white">Structured Output (JSON Schema)</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                            Forza al modelo a responder bajo un esquema estricto de JSON. Garantiza cero texto conversacional alrededor de la salida para integración directa con software.
+                        </p>
+                    </div>
+
+                    <!-- Control 4 -->
+                    <div class="p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold">04</div>
+                            <h3 class="text-base font-bold text-white">Safety Settings (Filtros)</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                            Ajusta los umbrales para contenido explícito, acoso o discurso de odio. Permite flexibilidad acadêmica cuando se analizan textos históricos o médicos sensibles.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: ADVANCED TOOLS -->
+            <section id="tab-advanced" class="tab-content hidden space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i>
+                        Herramientas Avanzadas del Ecosistema
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Capacidades avanzadas de procesamiento multimodal, grounding, invocación de funciones y fine-tuning.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Tool 1: Multimodality -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/30 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-photo-film"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">A. Multimodalidad de Gran Alcance</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Permite cargar pistas de audio de horas, videos completos, documentos PDF extensos y código fuente sin necesidad de transcribirlos manualmente.
+                        </p>
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+                            <p class="font-semibold text-cyan-400 mb-1"><i class="fa-solid fa-video mr-1"></i> Caso de uso: Análisis de Clase Magistral</p>
+                            <p class="text-slate-400">Subes un MP4 de 45 min y pides: <em>"Encuentra la marca de tiempo exacta donde el profesor habla de Árboles Binarios."</em></p>
+                        </div>
+                    </div>
+
+                    <!-- Tool 2: Grounding -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/30 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">B. Grounding con Google Search</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Conecta las respuestas de Gemini directamente con el motor de búsqueda en tiempo real, citando las fuentes web y erradicando alucinaciones.
+                        </p>
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+                            <p class="font-semibold text-emerald-400 mb-1"><i class="fa-solid fa-newspaper mr-1"></i> Caso de uso: Noticias en Tiempo Real</p>
+                            <p class="text-slate-400">Consultas sobre los últimos anuncios de tecnología de hoy y recibes enlaces verificables y citados.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tool 3: Function Calling -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/30 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-code-branch"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">C. Function Calling (Llamada a Funciones)</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Gemini actúa como un agente inteligente que decide en qué momento invocar APIs externas para consultar clima, bases de datos o stock.
+                        </p>
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-purple-300">
+                            { "name": "obtener_temperatura", "args": { "ciudad": "Santiago" } }
+                        </div>
+                    </div>
+
+                    <!-- Tool 4: Code Export & Fine Tuning -->
+                    <div class="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/30 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">D. Model Tuning & Get Code</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Entrena versiones personalizadas del modelo con datasets propios o exporta el prompt optimizado a Python, JS, Swift y cURL con un clic.
+                        </p>
+                        <div class="flex gap-2 text-xs font-mono">
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Python</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">JavaScript</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">cURL</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: INTERACTIVE PLAYGROUND SIMULATOR -->
+            <section id="tab-playground" class="tab-content hidden space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-flask text-cyan-400"></i>
+                            Simulador Interactivo Google AI Studio
+                        </h2>
+                        <p class="text-sm text-slate-400 mt-1">
+                            Experimenta el panel de desarrollo en tiempo real directamente desde este entorno.
+                        </p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 text-xs font-mono self-start sm:self-auto">
+                        Ambiente Sandbox
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column: Controls & Configuration -->
+                    <div class="lg:col-span-1 glass-panel p-5 rounded-2xl border border-slate-800 space-y-5">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-2">
+                            <i class="fa-solid fa-sliders text-cyan-400 mr-2"></i> Ajustes de Control
+                        </h3>
+
+                        <!-- Mode Selector -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Modo de Prompt</label>
+                            <div class="grid grid-cols-3 gap-1 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs">
+                                <button onclick="setSimMode('chat')" id="sim-mode-chat" class="sim-mode-btn active py-1.5 rounded-lg text-center font-medium">Chat</button>
+                                <button onclick="setSimMode('freeform')" id="sim-mode-freeform" class="sim-mode-btn py-1.5 rounded-lg text-center font-medium">Freeform</button>
+                                <button onclick="setSimMode('structured')" id="sim-mode-structured" class="sim-mode-btn py-1.5 rounded-lg text-center font-medium">Structured</button>
+                            </div>
+                        </div>
+
+                        <!-- Model Selector -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Modelo Gemini</label>
+                            <select id="simModel" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Razonamiento Complejo)</option>
+                                <option value="gemini-1.5-flash" selected>Gemini 1.5 Flash (Alta Velocidad)</option>
+                            </select>
+                        </div>
+
+                        <!-- Temperature Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+                                <span>Temperatura</span>
+                                <span id="tempVal" class="text-cyan-400 font-mono">0.7</span>
+                            </div>
+                            <input type="range" id="simTemp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('tempVal').innerText = this.value" class="w-full accent-cyan-500 cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                                <span>0.0 (Preciso)</span>
+                                <span>2.0 (Creativo)</span>
+                            </div>
+                        </div>
+
+                        <!-- Toggles -->
+                        <div class="space-y-3 pt-2 border-t border-slate-800/80">
+                            <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer">
+                                <span>Grounding con Google Search</span>
+                                <input type="checkbox" id="simGrounding" class="accent-cyan-500 w-4 h-4 rounded">
+                            </label>
+                            <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer">
+                                <span>Forzar Salida JSON Schema</span>
+                                <input type="checkbox" id="simJsonSchema" class="accent-cyan-500 w-4 h-4 rounded">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Editor Screen -->
+                    <div class="lg:col-span-2 glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col h-[520px]">
+                        
+                        <!-- System Instruction Input -->
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-cyan-400 mb-1">
+                                <i class="fa-solid fa-robot mr-1"></i> System Instruction (Instrucción del Sistema)
+                            </label>
+                            <input id="simSystem" type="text" value="Eres un asistente pedagógico experto en Inteligencia Artificial y arquitecturas Nube." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                        </div>
+
+                        <!-- Interactive Chat / Prompt Workspace -->
+                        <div id="simOutputBox" class="flex-1 bg-slate-950 rounded-xl border border-slate-800/80 p-4 overflow-y-auto space-y-3 mb-4 font-sans text-xs">
+                            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300">
+                                <span class="font-bold text-cyan-400"><i class="fa-solid fa-circle-info mr-1"></i> Dataflow IA Simulator:</span> Escribe tu consulta abajo y haz clic en "Ejecutar Prompt" para simular la respuesta del modelo Gemini configurado.
+                            </div>
+                        </div>
+
+                        <!-- User Input & Action Row -->
+                        <div class="flex gap-2">
+                            <input id="simUserInput" type="text" placeholder="Escribe tu prompt aquí... (Ej: Explícame el concepto de Function Calling)" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+                            <button onclick="runSimulation()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all shrink-0">
+                                <i class="fa-solid fa-paper-plane"></i> Ejecutar
+                            </button>
+                        </div>
+
+                        <!-- Code Export Drawer Toggle -->
+                        <div class="mt-3 flex justify-between items-center text-xs border-t border-slate-800/80 pt-2">
+                            <button onclick="toggleCodeExport()" class="text-cyan-400 hover:underline flex items-center gap-1 font-mono">
+                                <i class="fa-solid fa-code"></i> Get Code (Ver código generado)
+                            </button>
+                            <span class="text-slate-500 text-[11px]">Respuesta generada en cliente</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPORT CODE DISPLAY MODAL/PANEL -->
+                <div id="codeExportPanel" class="hidden glass-panel p-5 rounded-2xl border border-cyan-500/30 font-mono text-xs text-slate-200">
+                    <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                        <span class="text-cyan-400 font-bold"><i class="fa-solid fa-terminal mr-2"></i> Código Python Exportado (google-genai SDK)</span>
+                        <button onclick="copyGeneratedCode()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-xs">
+                            <i class="fa-regular fa-copy mr-1"></i> Copiar Código
+                        </button>
+                    </div>
+                    <pre id="codeOutput" class="bg-slate-950 p-4 rounded-xl overflow-x-auto text-cyan-300">
+# Código generado dinámicamente según configuración
+from google import genai
+
+client = genai.Client(api_key="TU_API_KEY")
+
+response = client.models.generate_content(
+    model="gemini-1.5-flash",
+    contents="Escribe tu consulta aquí",
+)
+print(response.text)
+                    </pre>
+                </div>
+            </section>
+
+            <!-- TAB 6: WORKFLOW -->
+            <section id="tab-workflow" class="tab-content hidden space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-diagram-project text-cyan-400"></i>
+                        Flujo de Trabajo Recomendado
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Ciclo metódico paso a paso para desarrollar prototipos profesionales de Inteligencia Artificial.
+                    </p>
+                </div>
+
+                <!-- STEP BY STEP CARDS -->
+                <div class="relative space-y-4 before:absolute before:inset-0 before:left-6 before:w-0.5 before:bg-slate-800 before:hidden sm:before:block">
+                    <!-- Step 1 -->
+                    <div class="relative flex flex-col sm:flex-row items-start gap-4 p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500 text-slate-950 font-black text-lg flex items-center justify-center shrink-0 z-10">
+                            1
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-1">Definir la Tarea y el Objetivo</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Establece con claridad el alcance del proyecto. Determina si el sistema requiere mantener memoria contextual conversacional, auditar documentos o extraer estructuradamente JSON.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative flex flex-col sm:flex-row items-start gap-4 p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-black text-lg flex items-center justify-center shrink-0 z-10">
+                            2
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-1">Seleccionar el Entorno de Prompt</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Elige la modalidad óptima: <strong>Chat Prompt</strong> para asistentes, <strong>Freeform</strong> para documentos multimodales o <strong>Structured</strong> para pocos ejemplos (*few-shot*).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex flex-col sm:flex-row items-start gap-4 p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-black text-lg flex items-center justify-center shrink-0 z-10">
+                            3
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-1">Configurar Parámetros Técnicos</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Ajusta la Temperatura (baja para lógica rigurosa, alta para creatividad), define la Instrucción del Sistema e implementa esquemas JSON en caso de requerir integración.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative flex flex-col sm:flex-row items-start gap-4 p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-black text-lg flex items-center justify-center shrink-0 z-10">
+                            4
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-1">Probar, Iterar y Evaluar</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Introduce casos límite (*edge cases*), ajusta la redacción del prompt y evalúa la consistencia de las respuestas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="relative flex flex-col sm:flex-row items-start gap-4 p-5 rounded-2xl glass-panel border border-slate-800">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-black text-lg flex items-center justify-center shrink-0 z-10">
+                            5
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-1">Exportar a Código (Get Code)</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Copia el fragmento de código generado en Python, JS o cURL e intégralo directamente en tu backend o aplicación de producción.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-8 text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Footer Brand Left -->
+                <div class="flex items-center gap-3">
+                    <img src="Data Transp-1.png" alt="Dataflow IA Logo" class="h-8 w-auto object-contain" onerror="this.style.display='none'">
+                    <div>
+                        <div class="font-bold text-white text-sm">DATAFLOW <span class="text-cyan-400">IA</span></div>
+                        <div class="text-[11px] text-slate-500">Transformando conocimiento en código e innovación.</div>
+                    </div>
+                </div>
+
+                <!-- Footer Links & Info Middle -->
+                <div class="flex flex-wrap items-center justify-center gap-6 text-slate-300 font-medium">
+                    <a href="https://www.dataflowia.com" target="_blank" rel="noopener" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-globe text-cyan-400"></i> www.dataflowia.com
+                    </a>
+                    <a href="mailto:contacto@dataflowia.com" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-envelope text-cyan-400"></i> contacto@dataflowia.com
+                    </a>
+                </div>
+
+                <!-- Footer Rights Right -->
+                <div class="text-center md:text-right text-slate-500 text-[11px]">
+                    © 2026 Dataflow IA. Todos los derechos reservados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Tab Switcher
+        function switchTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            // Show target
+            const targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+
+            // Update desktop nav buttons styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-cyan-400', 'border-l-4', 'border-cyan-400', 'font-bold');
+                btn.classList.add('text-slate-300');
+            });
+
+            const activeNav = document.getElementById('nav-' + tabId);
+            if(activeNav) {
+                activeNav.classList.add('bg-slate-800', 'text-cyan-400', 'border-l-4', 'border-cyan-400', 'font-bold');
+            }
+
+            // Scroll smoothly to top of main content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile Menu Drawer Toggle
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobileDrawer');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                drawer.classList.add('flex');
+            } else {
+                drawer.classList.add('hidden');
+                drawer.classList.remove('flex');
+            }
+        }
+
+        // Search Synchronization & Filter
+        function syncAndFilter(val) {
+            document.getElementById('searchInput').value = val;
+            filterContent();
+        }
+
+        function filterContent() {
+            const query = (document.getElementById('searchInput').value || document.getElementById('mobileSearchInput').value || '').toLowerCase();
+            
+            if(!query.trim()) return;
+
+            // Simple text match highlight or focus to overview
+            switchTab('overview');
+        }
+
+        // Simulator Logic
+        let currentSimMode = 'chat';
+
+        function setSimMode(mode) {
+            currentSimMode = mode;
+            document.querySelectorAll('.sim-mode-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500', 'text-slate-950', 'font-bold');
+                btn.classList.add('text-slate-400');
+            });
+            const activeBtn = document.getElementById('sim-mode-' + mode);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-cyan-500', 'text-slate-950', 'font-bold');
+            }
+            updateCodeExport();
+        }
+
+        function runSimulation() {
+            const userInput = document.getElementById('simUserInput').value;
+            const systemInst = document.getElementById('simSystem').value;
+            const model = document.getElementById('simModel').value;
+            const temp = document.getElementById('simTemp').value;
+            const grounding = document.getElementById('simGrounding').checked;
+            const jsonSchema = document.getElementById('simJsonSchema').checked;
+
+            if(!userInput.trim()) return;
+
+            const outputBox = document.getElementById('simOutputBox');
+
+            // Append User Question
+            const userMsg = document.createElement('div');
+            userMsg.className = 'p-3 rounded-lg bg-blue-950/60 border border-blue-800/40 text-blue-200';
+            userMsg.innerHTML = `<strong class="text-cyan-400">Usuario:</strong> ${escapeHtml(userInput)}`;
+            outputBox.appendChild(userMsg);
+
+            // Generate Simulated Response
+            let responseText = "";
+            if (jsonSchema) {
+                responseText = `{\n  "status": "success",\n  "modelo_usado": "${model}",\n  "temperatura": ${temp},\n  "respuesta": "Análisis procesado correctamente bajo esquema JSON estricto para: '${escapeHtml(userInput)}'"\n}`;
+            } else if (grounding) {
+                responseText = `[Búsqueda en Google activa para: '${escapeHtml(userInput)}']\n\nSegún la información recuperada de fuentes oficiales, Google AI Studio permite integración fluida y respuestas verificadas con marcas de agua de datos y citas web.`;
+            } else {
+                responseText = `Como modelo de IA configurado (${model}, temp ${temp}), respondo a tu consulta: "${escapeHtml(userInput)}".\n\nGoogle AI Studio facilita la creación rápida de prototipos mediante la superventana de contexto de 2 millones de tokens y exportación rápida a código.`;
+            }
+
+            const botMsg = document.createElement('div');
+            botMsg.className = 'p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 whitespace-pre-wrap';
+            botMsg.innerHTML = `<strong class="text-cyan-400">Gemini (${model}):</strong>\n${responseText}`;
+            outputBox.appendChild(botMsg);
+
+            // Clear input & auto scroll
+            document.getElementById('simUserInput').value = "";
+            outputBox.scrollTop = outputBox.scrollHeight;
+
+            updateCodeExport();
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function toggleCodeExport() {
+            const panel = document.getElementById('codeExportPanel');
+            panel.classList.toggle('hidden');
+            updateCodeExport();
+        }
+
+        function updateCodeExport() {
+            const model = document.getElementById('simModel').value;
+            const temp = document.getElementById('simTemp').value;
+            const systemInst = document.getElementById('simSystem').value;
+            const jsonSchema = document.getElementById('simJsonSchema').checked;
+
+            const code = `# Código generado dinámicamente por Dataflow IA
+from google import genai
+from google.genai import types
+
+client = genai.Client(api_key="TU_API_KEY")
+
+config = types.GenerateContentConfig(
+    system_instruction="${systemInst}",
+    temperature=${temp},
+    ${jsonSchema ? 'response_mime_type="application/json"' : '# Formato estándar'}
+)
+
+response = client.models.generate_content(
+    model="${model}",
+    contents="Tu prompt aquí",
+    config=config
+)
+
+print(response.text)`;
+
+            document.getElementById('codeOutput').innerText = code;
+        }
+
+        function copyGeneratedCode() {
+            const codeText = document.getElementById('codeOutput').innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            // Temporary feedback alert replacement
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400 mr-1"></i> ¡Copiado!';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Initialize default view
+        window.onload = function() {
+            switchTab('overview');
+            setSimMode('chat');
+        };
+    </script>
+</body>
+</html>
